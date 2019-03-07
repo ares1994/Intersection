@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         photoPickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Fire an intent to show an image picker
+
             }
         });
 
