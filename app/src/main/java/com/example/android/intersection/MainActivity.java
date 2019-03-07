@@ -147,10 +147,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null){
+                if (user != null) {
                     onSignedInInitialize(user.getDisplayName());
 
-                } else{
+                } else {
                     onSignedOutCleanup();
                     startActivityForResult(
                             AuthUI.getInstance()
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (authStateListener != null){
+        if (authStateListener != null) {
             firebaseAuth.removeAuthStateListener(authStateListener);
         }
         detachDatabaseReadListener();
@@ -187,11 +187,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN){
-            if (resultCode == RESULT_OK){
-                Toast.makeText(MainActivity.this,"Signed In!",Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED){
-                Toast.makeText(MainActivity.this,"Sign In Cancelled",Toast.LENGTH_SHORT).show();
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(MainActivity.this, "Signed In!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(MainActivity.this, "Sign In Cancelled", Toast.LENGTH_SHORT).show();
                 finish();
             }
 
@@ -207,22 +207,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.sign_out_menu:
+                AuthUI.getInstance().signOut(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
-    private void onSignedInInitialize(String name){
+    private void onSignedInInitialize(String name) {
         username = name;
         attachDatabaseReadListener();
     }
 
-    private void onSignedOutCleanup(){
+    private void onSignedOutCleanup() {
         username = ANONYMOUS;
         messageAdapter.clear();
     }
 
-    private void attachDatabaseReadListener(){
-        if (childEventListener == null){
+    private void attachDatabaseReadListener() {
+        if (childEventListener == null) {
             childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -248,8 +254,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void detachDatabaseReadListener(){
-        if (childEventListener != null){
+    private void detachDatabaseReadListener() {
+        if (childEventListener != null) {
             messagesDatabaseReference.removeEventListener(childEventListener);
             childEventListener = null;
         }
