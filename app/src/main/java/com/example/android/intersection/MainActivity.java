@@ -15,8 +15,10 @@
  */
 package com.example.android.intersection;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -140,33 +142,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                CommonMessage commonMessage = dataSnapshot.getValue(CommonMessage.class);
-                messageAdapter.add(commonMessage);
-            }
 
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
-        messagesDatabaseReference.addChildEventListener(childEventListener);
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null){
-                    onSignedInInitialize();
-                     Toast.makeText(MainActivity.this,"Signed In!",Toast.LENGTH_SHORT).show();
+                    onSignedInInitialize(user.getDisplayName());
+
                 } else{
                     onSignedOutCleanup();
                     startActivityForResult(
@@ -193,7 +176,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        firebaseAuth.removeAuthStateListener(authStateListener);
+        if (authStateListener != null){
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+        detachDatabaseReadListener();
+        messageAdapter.clear();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN){
+            if (resultCode == RESULT_OK){
+                Toast.makeText(MainActivity.this,"Signed In!",Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED){
+                Toast.makeText(MainActivity.this,"Sign In Cancelled",Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+        }
     }
 
     @Override
@@ -209,11 +211,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void onSignedInInitialize(){
-
+    private void onSignedInInitialize(String name){
+        username = name;
+        attachDatabaseReadListener();
     }
 
     private void onSignedOutCleanup(){
-        
+        username = ANONYMOUS;
+        messageAdapter.clear();
+    }
+
+    private void attachDatabaseReadListener(){
+        if (childEventListener == null){
+            childEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    CommonMessage commonMessage = dataSnapshot.getValue(CommonMessage.class);
+                    messageAdapter.add(commonMessage);
+                }
+
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
+
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            };
+            messagesDatabaseReference.addChildEventListener(childEventListener);
+        }
+
+    }
+
+
+    private void detachDatabaseReadListener(){
+        if (childEventListener != null){
+            messagesDatabaseReference.removeEventListener(childEventListener);
+            childEventListener = null;
+        }
     }
 }
