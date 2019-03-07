@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "567998082539",
+    "firebase_url": "https://intersection-b310e.firebaseio.com",
+    "project_id": "intersection-b310e",
+    "storage_bucket": "intersection-b310e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567998082539:android:facf9f5c40f05b16",
+        "android_client_info": {
+          "package_name": "com.example.android.intersection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567998082539-qjilgu4sn48c46vnqnl2r6gf6ujibgh6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.intersection",
+            "certificate_hash": "fd82363eef9030016909c79bd0ddcab6267ede0b"
+          }
+        },
+        {
+          "client_id": "567998082539-vs7khrbr5kg4nge1cvtvin26kn44hf2o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwkRhTUjSLM9_ZL0EZJchOlD4J02fTlZ8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567998082539-vs7khrbr5kg4nge1cvtvin26kn44hf2o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
